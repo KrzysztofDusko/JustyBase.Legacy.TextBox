@@ -12,9 +12,14 @@ namespace FastColoredTextBoxNS
     {
         BindingList<HotkeyWrapper> wrappers = new BindingList<HotkeyWrapper>();
 
-        public HotkeysEditorForm(HotkeysMapping hotkeys)
+        public HotkeysEditorForm(HotkeysMapping hotkeys, string message = "")
         {
             InitializeComponent();
+            if (!String.IsNullOrWhiteSpace(message))
+            {
+                this.Text += (" " + message);
+            }
+
             BuildWrappers(hotkeys);
             dgv.DataSource = wrappers;
         }
