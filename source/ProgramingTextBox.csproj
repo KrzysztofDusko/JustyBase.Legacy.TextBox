@@ -1,0 +1,62 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+	<PropertyGroup>
+		<TargetFramework>net5.0-windows</TargetFramework>
+		<UseWindowsForms>true</UseWindowsForms>
+		<OutputType>Library</OutputType>
+		<RootNamespace>FastColoredTextBoxNS</RootNamespace>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+		<DocumentationFile>bin\Debug\FastColoredTextBox.XML</DocumentationFile>
+	</PropertyGroup>
+	<PropertyGroup>
+		<SignAssembly>true</SignAssembly>
+	</PropertyGroup>
+	<PropertyGroup>
+		<AssemblyOriginatorKeyFile>FCTB_key.snk</AssemblyOriginatorKeyFile>
+	</PropertyGroup>
+	<ItemGroup>
+		<Compile Update="AutocompleteMenu.cs" />
+		<Compile Update="DocumentMap.cs" />
+		<Compile Update="GoToForm.cs" />
+		<Compile Update="GoToForm.Designer.cs">
+			<DependentUpon>GoToForm.cs</DependentUpon>
+		</Compile>
+		<Compile Update="HotkeysEditorForm.cs" />
+		<Compile Update="HotkeysEditorForm.Designer.cs">
+			<DependentUpon>HotkeysEditorForm.cs</DependentUpon>
+		</Compile>
+		<Compile Update="Ruler.cs" />
+		<Compile Update="Ruler.Designer.cs">
+			<DependentUpon>Ruler.cs</DependentUpon>
+		</Compile>
+		<Compile Update="ReplaceForm.cs" />
+		<Compile Update="ReplaceForm.Designer.cs">
+			<DependentUpon>ReplaceForm.cs</DependentUpon>
+		</Compile>
+		<Compile Update="FastColoredTextBox.cs" />
+		<Compile Update="FindForm.cs" />
+		<Compile Update="FindForm.Designer.cs">
+			<DependentUpon>FindForm.cs</DependentUpon>
+		</Compile>
+		<Compile Update="UnfocusablePanel.cs" />
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Update="FastColoredTextBox.resx">
+			<DependentUpon>FastColoredTextBox.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Update="FindForm.resx">
+			<DependentUpon>FindForm.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Update="GoToForm.resx">
+			<DependentUpon>GoToForm.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Update="HotkeysEditorForm.resx">
+			<DependentUpon>HotkeysEditorForm.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Update="ReplaceForm.resx">
+			<DependentUpon>ReplaceForm.cs</DependentUpon>
+			<SubType>Designer</SubType>
+		</EmbeddedResource>
+	</ItemGroup>
+</Project>
