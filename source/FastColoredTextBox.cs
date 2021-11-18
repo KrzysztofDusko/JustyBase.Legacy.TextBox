@@ -3879,17 +3879,19 @@ namespace FastColoredTextBoxNS
                     break;
 
                 case FCTBAction.ClearWordRight:
-                    if (OnKeyPressing((char) 0xff)) //KeyPress event processed key
+                    if (OnKeyPressing((char)0xff)) //KeyPress event processed key
                         break;
                     if (!Selection.ReadOnly)
                     {
                         if (!Selection.IsEmpty)
                             ClearSelected();
-                        Selection.GoWordRight(true);
+                        //Selection.GoWordRight(true);
+                        Selection.GoWordRight(true, true);
                         if (!Selection.ReadOnly)
                             ClearSelected();
                     }
-                    OnKeyPressed((char) 0xff);
+                    OnKeyPressed((char)0xff);
+                    
                     break;
 
                 case FCTBAction.GoWordLeft:
