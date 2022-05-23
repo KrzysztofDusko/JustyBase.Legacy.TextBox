@@ -11,7 +11,7 @@ namespace Test
         {
             if (e.KeyData == (Keys.Delete | Keys.Control))
             {
-                int A = 1;
+                fastColoredTextBox1.OpenFile(@"C:\Users\dusko\source\repos\ProgramingTextBox\wadliwyPlikZanonimizowany.sql");
             }
         }
     }

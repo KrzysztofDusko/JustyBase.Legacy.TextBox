@@ -120,7 +120,7 @@ namespace FastColoredTextBoxNS
             long currentPos = 0;
             int skipUTF8Bytes = 0;
 
-            while (currentPos < SampleBytes.Length)
+            while (currentPos < SampleBytes.Length - 1)
             {
                 //binary null distribution
                 if (SampleBytes[currentPos] == 0)
@@ -139,7 +139,7 @@ namespace FastColoredTextBoxNS
                 if (skipUTF8Bytes == 0)
                 {
                     int lengthFound = DetectSuspiciousUTF8SequenceLength(SampleBytes, currentPos);
-
+  
                     if (lengthFound > 0)
                     {
                         suspiciousUTF8SequenceCount++;
