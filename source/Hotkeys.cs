@@ -6,6 +6,7 @@ using System.ComponentModel.Design;
 using System.Drawing;
 using System.Drawing.Design;
 using System.Globalization;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -123,13 +124,52 @@ namespace FastColoredTextBoxNS
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 
             var kc = new KeysConverter();
-            
+
             foreach (var p in s.Split(','))
             {
-                var pp = p.Split('=');
-                var k = (Keys)kc.ConvertFromString(pp[0].Trim());
-                var a = (FCTBAction)Enum.Parse(typeof(FCTBAction), pp[1].Trim());
-                result[k] = a;
+                try
+                {
+                    var pp = p.Split('=');
+                    KEYS k;
+#if NET7_0_OR_GREATER
+
+                    Dictionary<string, KEYS> mapping = new Dictionary<string, KEYS>();
+                    foreach (KEYS item in Enum.GetValues(typeof(KEYS)))
+                    {
+                        mapping[item.ToString()] = item;
+                    }
+                    mapping["PgUp"] = KEYS.PageUp;
+                    mapping["PgDn"] = KEYS.PageDown;
+                    mapping["Ins"] = KEYS.Insert;
+                    mapping["Del"] = KEYS.Delete;
+                    mapping["Ctrl"] = KEYS.Control;
+                    mapping["0"] = KEYS.D0;
+
+                    string[] txt = pp[0].Trim().Split('+');
+                    if (txt.Length >= 1)
+                    {
+                        k = mapping[txt[0]];
+                        for (int i = 1; i < txt.Length; i++)
+                        {
+                            k |= mapping[txt[i]];
+                        }
+                    }
+                    else
+                    {
+                        k = KEYS.NoName;
+                    }
+#else
+                k = (Keys)kc.ConvertFromString(pp[0].Trim());
+#endif
+                    var a = (FCTBAction)Enum.Parse(typeof(FCTBAction), pp[1].Trim());
+                    result[k] = a;
+                }
+
+                catch (Exception)
+                {
+
+                    throw;
+                }
             }
 
             Thread.CurrentThread.CurrentUICulture = cult;
