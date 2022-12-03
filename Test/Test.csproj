@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\source\JustDataTextBox.csproj" />
     <ProjectReference Include="..\source\ProgramingTextBox.csproj" />
   </ItemGroup>
 
