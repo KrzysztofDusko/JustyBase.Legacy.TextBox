@@ -31,7 +31,12 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.fastColoredTextBox1 = new FastColoredTextBoxNS.FastColoredTextBox();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.dDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fFFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.fastColoredTextBox1)).BeginInit();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // fastColoredTextBox1
@@ -49,24 +54,53 @@
         '\''};
             this.fastColoredTextBox1.AutoIndentCharsPatterns = "^\\s*[\\w\\.]+(\\s\\w+)?\\s*(?<range>=)\\s*(?<range>[^;=]+);\r\n^\\s*(case|default)\\s*[^:]*" +
     "(?<range>:)\\s*(?<range>[^;]+);";
-            this.fastColoredTextBox1.AutoScrollMinSize = new System.Drawing.Size(179, 14);
+            this.fastColoredTextBox1.AutoScrollMinSize = new System.Drawing.Size(27, 14);
             this.fastColoredTextBox1.BackBrush = null;
             this.fastColoredTextBox1.CharHeight = 14;
             this.fastColoredTextBox1.CharWidth = 8;
-            this.fastColoredTextBox1.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.fastColoredTextBox1.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
-            this.fastColoredTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.fastColoredTextBox1.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.fastColoredTextBox1.Hotkeys = resources.GetString("fastColoredTextBox1.Hotkeys");
             this.fastColoredTextBox1.IsReplaceMode = false;
-            this.fastColoredTextBox1.Location = new System.Drawing.Point(0, 0);
+            this.fastColoredTextBox1.Location = new System.Drawing.Point(12, 46);
             this.fastColoredTextBox1.Name = "fastColoredTextBox1";
             this.fastColoredTextBox1.Paddings = new System.Windows.Forms.Padding(0);
             this.fastColoredTextBox1.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
-            this.fastColoredTextBox1.Size = new System.Drawing.Size(800, 450);
+            this.fastColoredTextBox1.ServiceColors = ((FastColoredTextBoxNS.ServiceColors)(resources.GetObject("fastColoredTextBox1.ServiceColors")));
+            this.fastColoredTextBox1.Size = new System.Drawing.Size(150, 150);
             this.fastColoredTextBox1.TabIndex = 0;
-            this.fastColoredTextBox1.Text = "fastColoredTextBox1";
             this.fastColoredTextBox1.useUtf8WithoutBoom = false;
             this.fastColoredTextBox1.Zoom = 100;
-            this.fastColoredTextBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.fastColoredTextBox1_KeyDown);
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.dDToolStripMenuItem,
+            this.fFFToolStripMenuItem,
+            this.aAToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(800, 24);
+            this.menuStrip1.TabIndex = 1;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // dDToolStripMenuItem
+            // 
+            this.dDToolStripMenuItem.Name = "dDToolStripMenuItem";
+            this.dDToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
+            this.dDToolStripMenuItem.Text = "DD";
+            // 
+            // fFFToolStripMenuItem
+            // 
+            this.fFFToolStripMenuItem.Name = "fFFToolStripMenuItem";
+            this.fFFToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fFFToolStripMenuItem.Text = "FFF";
+            // 
+            // aAToolStripMenuItem
+            // 
+            this.aAToolStripMenuItem.Name = "aAToolStripMenuItem";
+            this.aAToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
+            this.aAToolStripMenuItem.Text = "AA";
             // 
             // Form1
             // 
@@ -74,15 +108,24 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.fastColoredTextBox1);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.fastColoredTextBox1)).EndInit();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
         private FastColoredTextBoxNS.FastColoredTextBox fastColoredTextBox1;
+        private MenuStrip menuStrip1;
+        private ToolStripMenuItem dDToolStripMenuItem;
+        private ToolStripMenuItem fFFToolStripMenuItem;
+        private ToolStripMenuItem aAToolStripMenuItem;
     }
 }

@@ -23,7 +23,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Design;
 using System.Drawing.Drawing2D;
@@ -46,8 +45,14 @@ namespace FastColoredTextBoxNS
     public partial class FastColoredTextBox : UserControl, ISupportInitialize
     {
         internal const int minLeftIndent = 8;
-        //private const int maxBracketSearchIterations = 1000;
-        public int maxBracketSearchIterations = 1000;
+
+        private int maxBracketSearchIterations = 1_000;
+        public int MaxBracketSearchIterations
+        {
+            get => maxBracketSearchIterations;
+            set => maxBracketSearchIterations = value;
+        }
+
         private const int maxLinesForFolding = 3000;
         private const int minLinesForAccuracy = 100000;
         private const int WM_IME_SETCONTEXT = 0x0281;
@@ -4297,43 +4302,6 @@ namespace FastColoredTextBoxNS
             Selection.End = old.End;
         }
 
-
-        /// <summary>
-        /// Convert selected text to upper case (without "aaa", 'aaa')
-        /// </summary>
-        public virtual void UpperCaseNoTxt()
-        {
-            Range old = Selection.Clone();
-
-            string str = string.Create(SelectedText.Length, SelectedText, (chars, buf) => {
-
-                int n1 = 0;
-                int n2 = 0;
-                for (int i = 0; i < chars.Length; i++) 
-                {
-                    char c = buf[i];
-                    if (c == '\'')
-                    {
-                        n1++;
-                    }
-                    else if (c == '"')
-                    {
-                        n2++;
-                    }
-                    else if (n1 % 2 == 0 && n2 % 2 == 0)
-                    {
-                        c = char.ToUpper(buf[i]);
-                    }
-
-                    chars[i] = c;
-                }
-            });
-
-            SelectedText = str;
-            Selection.Start = old.Start;
-            Selection.End = old.End;
-        }
-
         /// <summary>
         /// Convert selected text to lower case
         /// </summary>
@@ -4345,42 +4313,108 @@ namespace FastColoredTextBoxNS
             Selection.End = old.End;
         }
 
-
-        /// <summary>
-        /// Convert selected text to lower case (without "aaa", 'aaa')
-        /// </summary>
-        public virtual void LowerCaseNoTxt()
+        private void NoTxtHelper(bool upper)
         {
             Range old = Selection.Clone();
-            string str = string.Create(SelectedText.Length, SelectedText, (chars, buf) => {
-                int n1 = 0;
-                int n2 = 0;
-
+            string str = string.Create(SelectedText.Length, SelectedText, (chars, buf) =>
+            {
                 for (int i = 0; i < chars.Length; i++)
                 {
                     char c = buf[i];
 
                     if (c == '\'')
                     {
-                        n1++;
+                        chars[i] = c;
+                        c = (char)0;
+                        i++;
+                        while (i < chars.Length && c != '\'')
+                        {
+                            c = buf[i];
+                            chars[i] = c;
+                            i++;
+                        }
+                        i--;
+                        continue;
                     }
-                    else if (c == '"')
+                    else if (c == '\"')
                     {
-                        n2++;
+                        chars[i] = c;
+                        c = (char)0;
+                        i++;
+                        while (i < chars.Length && c != '\"')
+                        {
+                            c = buf[i];
+                            chars[i] = c;
+                            i++;
+                        }
+                        i--;
+                        continue;
                     }
-                    else if (n1%2==0 && n2%2==0)
+                    else if (c == '-' && i < chars.Length - 1 && buf[i + 1] == '-')
                     {
-                        c = char.ToLower(buf[i]);
+                        chars[i] = c;
+                        c = (char)0;
+                        i++;
+                        while (i < chars.Length && c != '\n')
+                        {
+                            c = buf[i];
+                            chars[i] = c;
+                            i++;
+                        }
+                        i--;
+                        continue;
+                    }
+                    else if (c == '/' && i < chars.Length - 1 && buf[i + 1] == '*')
+                    {
+                        chars[i] = c;
+                        c = (char)0;
+                        i++;
+                        while (i < chars.Length)
+                        {
+                            c = buf[i];
+                            chars[i] = c;
+                            i++;
+                            if (c == '*' && i < chars.Length && buf[i] == '/')
+                            {
+                                chars[i] = '/';
+                                break;
+                            }
+                        }
+                        i--;
+                        continue;
                     }
 
+                    if (upper && char.IsLower(c))
+                    {
+                        c = char.ToUpper(c);
+                    }
+                    else if (!upper && char.IsUpper(c))
+                    {
+                        c = char.ToLower(c);
+                    }
                     chars[i] = c;
                 }
             });
+
             SelectedText = str;
             Selection.Start = old.Start;
             Selection.End = old.End;
+        }
 
-            
+        /// <summary>
+        /// Convert selected text to upper case (without "aaa", 'aaa')
+        /// </summary>
+        public virtual void UpperCaseNoTxt()
+        {
+            NoTxtHelper(true);
+        }
+
+        /// <summary>
+        /// Convert selected text to lower case (without "aaa", 'aaa')
+        /// </summary>
+        public virtual void LowerCaseNoTxt()
+        {
+            NoTxtHelper(false);
         }
 
         /// <summary>
