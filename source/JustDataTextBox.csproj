@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 	<PropertyGroup>
-		<TargetFrameworks>net7.0-windows;net6.0-windows</TargetFrameworks>
+		<TargetFrameworks>net7.0-windows;net8.0-windows</TargetFrameworks>
 		<UseWindowsForms>true</UseWindowsForms>
 		<OutputType>Library</OutputType>
 		<RootNamespace>FastColoredTextBoxNS</RootNamespace>
