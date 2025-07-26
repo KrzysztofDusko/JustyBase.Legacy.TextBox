@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Text;
 
@@ -21,7 +22,7 @@ namespace FastColoredTextBoxNS
         public bool UseOriginalFont { get; set; }
 
         FastColoredTextBox tb;
-        Dictionary<Color, int> colorTable = new Dictionary<Color, int>();
+        readonly Dictionary<Color, int> colorTable = new Dictionary<Color, int>();
 
         public ExportToRTF()
         {

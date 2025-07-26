@@ -433,7 +433,13 @@ namespace FastColoredTextBoxNS
                 if (brackets.Attributes["strategy"] == null || brackets.Attributes["strategy"].Value == "")
                     desc.bracketsHighlightStrategy = BracketsHighlightStrategy.Strategy2;
                 else
-                    desc.bracketsHighlightStrategy = (BracketsHighlightStrategy)Enum.Parse(typeof(BracketsHighlightStrategy), brackets.Attributes["strategy"].Value);
+                {
+                    if (!Enum.TryParse<BracketsHighlightStrategy>(brackets.Attributes["strategy"].Value, out var strategy))
+                    {
+                        throw new ArgumentException($"Invalid BracketsHighlightStrategy value: {brackets.Attributes["strategy"].Value}");
+                    }
+                    desc.bracketsHighlightStrategy = strategy;
+                }
             }
 
             var styleByName = new Dictionary<string, Style>();
@@ -461,7 +467,13 @@ namespace FastColoredTextBoxNS
             //options
             XmlAttribute optionsA = foldingNode.Attributes["options"];
             if (optionsA != null)
-                folding.options = (RegexOptions)Enum.Parse(typeof(RegexOptions), optionsA.Value);
+            {
+                if (!Enum.TryParse<RegexOptions>(optionsA.Value, out var foldingOptions))
+                {
+                    throw new ArgumentException($"Invalid RegexOptions value: {optionsA.Value}");
+                }
+                folding.options = foldingOptions;
+            }
 
             return folding;
         }
@@ -481,7 +493,13 @@ namespace FastColoredTextBoxNS
             rule.style = styles[styleA.Value];
             //options
             if (optionsA != null)
-                rule.options = (RegexOptions)Enum.Parse(typeof(RegexOptions), optionsA.Value);
+            {
+                if (!Enum.TryParse<RegexOptions>(optionsA.Value, out var ruleOptions))
+                {
+                    throw new ArgumentException($"Invalid RegexOptions value: {optionsA.Value}");
+                }
+                rule.options = ruleOptions;
+            }
 
             return rule;
         }
@@ -503,7 +521,11 @@ namespace FastColoredTextBoxNS
             //fontStyle
             FontStyle fontStyle = FontStyle.Regular;
             if (fontStyleA != null)
-                fontStyle = (FontStyle)Enum.Parse(typeof(FontStyle), fontStyleA.Value);
+                if (!Enum.TryParse<FontStyle>(fontStyleA.Value, out fontStyle))
+                {
+                    throw new ArgumentException($"Invalid FontStyle value: {fontStyleA.Value}");
+                }
+                // fontStyle is already assigned in the TryParse out parameter
 
             return new TextStyle(foreBrush, backBrush, fontStyle);
         }

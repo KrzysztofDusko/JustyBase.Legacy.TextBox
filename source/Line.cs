@@ -231,7 +231,7 @@ namespace FastColoredTextBoxNS
         /// <summary>
         /// Count of wordwrap string count for this line
         /// </summary>
-        public int WordWrapStringsCount
+        public readonly int WordWrapStringsCount
         {
             get
             {
@@ -265,7 +265,7 @@ namespace FastColoredTextBoxNS
         /// <summary>
         /// Gets index of wordwrap string for given char position
         /// </summary>
-        public int GetWordWrapStringIndex(int iChar)
+        public readonly int GetWordWrapStringIndex(int iChar)
         {
             if (cutOffPositions == null || cutOffPositions.Count == 0) return 0;
             for (int i = 0; i < cutOffPositions.Count; i++)

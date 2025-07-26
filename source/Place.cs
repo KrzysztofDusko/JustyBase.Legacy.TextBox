@@ -22,17 +22,17 @@ namespace FastColoredTextBoxNS
             iLine += dy;
         }
 
-        public bool Equals(Place other)
+        public readonly bool Equals(Place other)
         {
             return iChar == other.iChar && iLine == other.iLine;
         }
 
-        public override bool Equals(object obj)
+        public override readonly bool Equals(object obj)
         {
             return (obj is Place) && Equals((Place)obj);
         }
 
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             return iChar.GetHashCode() ^ iLine.GetHashCode();
         }
@@ -91,7 +91,7 @@ namespace FastColoredTextBoxNS
             get { return new Place(); }
         }
 
-        public override string ToString()
+        public override readonly string ToString()
         {
             return "(" + iChar + "," + iLine + ")";
         }

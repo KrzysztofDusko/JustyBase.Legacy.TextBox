@@ -16,7 +16,7 @@ namespace FastColoredTextBoxNS
         List<int> sourceFileLinePositions = new List<int>();
         FileStream fs;
         Encoding fileEncoding;
-        System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+        readonly System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
 
         /// <summary>
         /// Occurs when need to display line in the textbox

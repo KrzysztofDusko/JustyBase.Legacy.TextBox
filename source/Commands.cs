@@ -15,8 +15,6 @@ namespace FastColoredTextBoxNS
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="tb">Underlaying textbox</param>
-        /// <param name="c">Inserting char</param>
         public InsertCharCommand(TextSource ts, char c): base(ts)
         {
             this.c = c;
@@ -202,8 +200,6 @@ namespace FastColoredTextBoxNS
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="tb">Underlaying textbox</param>
-        /// <param name="insertedText">Text for inserting</param>
         public InsertTextCommand(TextSource ts, string insertedText): base(ts)
         {
             this.InsertedText = insertedText;
@@ -273,15 +269,12 @@ namespace FastColoredTextBoxNS
     public class ReplaceTextCommand : UndoableCommand
     {
         string insertedText;
-        List<Range> ranges;
-        List<string> prevText = new List<string>();
+        readonly List<Range> ranges;
+        readonly List<string> prevText = new List<string>();
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="tb">Underlaying textbox</param>
-        /// <param name="ranges">List of ranges for replace</param>
-        /// <param name="insertedText">Text for inserting</param>
         public ReplaceTextCommand(TextSource ts, List<Range> ranges, string insertedText)
             : base(ts)
         {
@@ -397,7 +390,6 @@ namespace FastColoredTextBoxNS
         /// <summary>
         /// Construstor
         /// </summary>
-        /// <param name="tb">Underlaying textbox</param>
         public ClearSelectedCommand(TextSource ts): base(ts)
         {
         }
@@ -471,8 +463,8 @@ namespace FastColoredTextBoxNS
     /// </summary>
     public class ReplaceMultipleTextCommand : UndoableCommand
     {
-        List<ReplaceRange> ranges;
-        List<string> prevText = new List<string>();
+        readonly List<ReplaceRange> ranges;
+        readonly List<string> prevText = new List<string>();
 
         public class ReplaceRange
         {
@@ -562,15 +554,13 @@ namespace FastColoredTextBoxNS
     /// </summary>
     public class RemoveLinesCommand : UndoableCommand
     {
-        List<int> iLines;
-        List<string> prevText = new List<string>();
+        readonly List<int> iLines;
+        readonly List<string> prevText = new List<string>();
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="tb">Underlaying textbox</param>
-        /// <param name="ranges">List of ranges for replace</param>
-        /// <param name="insertedText">Text for inserting</param>
+
         public RemoveLinesCommand(TextSource ts, List<int> iLines)
             : base(ts)
         {
@@ -656,9 +646,9 @@ namespace FastColoredTextBoxNS
     /// </summary>
     public class MultiRangeCommand : UndoableCommand
     {
-        private UndoableCommand cmd;
-        private Range range;
-        private List<UndoableCommand> commandsByRanges = new List<UndoableCommand>();
+        private readonly UndoableCommand cmd;
+        private readonly Range range;
+        private readonly List<UndoableCommand> commandsByRanges = new List<UndoableCommand>();
 
         public MultiRangeCommand(UndoableCommand command):base(command.ts)
         {

@@ -20,8 +20,10 @@
 //
 // #define Styles32
 
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Design;
@@ -34,7 +36,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
-using Microsoft.Win32;
 using Timer = System.Windows.Forms.Timer;
 
 namespace FastColoredTextBoxNS
@@ -138,11 +139,16 @@ namespace FastColoredTextBoxNS
         public FastColoredTextBox()
         {
             //register type provider
-            TypeDescriptionProvider prov = TypeDescriptor.GetProvider(GetType());
-            object theProvider =
-                prov.GetType().GetField("Provider", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(prov);
-            if (theProvider.GetType() != typeof (FCTBDescriptionProvider))
-                TypeDescriptor.AddProvider(new FCTBDescriptionProvider(GetType()), GetType());
+            // AOT-compatible: TypeDescriptor system replaced with FCTBDataBindingHelper
+            // The complex TypeDescriptor registration is no longer needed for AOT compatibility
+            // 
+            // Legacy code removed:
+            // - TypeDescriptor.GetProvider() uses reflection
+            // - GetField() with BindingFlags uses reflection  
+            // - TypeDescriptor.AddProvider() registers reflection-based providers
+            //
+            // For data binding, use FCTBDataBindingHelper.SetupDataBinding() instead
+
             //drawing optimization
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
             //append monospace font
@@ -259,9 +265,8 @@ namespace FastColoredTextBoxNS
         /// <summary>
         /// Strategy of search of brackets to highlighting
         /// </summary>
-        [DefaultValue(typeof(BracketsHighlightStrategy), "Strategy1")]
         [Description("Strategy of search of brackets to highlighting.")]
-        public BracketsHighlightStrategy BracketsHighlightStrategy { get; set; }
+        public BracketsHighlightStrategy BracketsHighlightStrategy { get; set; } = BracketsHighlightStrategy.Strategy1;
         
         /// <summary>
         /// Automatically shifts secondary wordwrap lines on the shift amount of the first line
@@ -277,7 +282,7 @@ namespace FastColoredTextBoxNS
         [Description("Indent of secondary wordwrap lines (in chars).")]
         public int WordWrapIndent { get; set; }
 
-        MacrosManager macrosManager;
+        readonly MacrosManager macrosManager;
         /// <summary>
         /// MacrosManager records, stores and executes the macroses
         /// </summary>
@@ -424,7 +429,6 @@ namespace FastColoredTextBoxNS
         /// <summary>
         /// Type of border of text area
         /// </summary>
-        [DefaultValue(typeof(TextAreaBorderType), "None")]
         [Description("Type of border of text area")]
         public TextAreaBorderType TextAreaBorder
         {
@@ -921,9 +925,8 @@ namespace FastColoredTextBoxNS
         /// <remarks>When a user enters text, a component refreshes highlighting (because the text was changed).
         /// This property specifies exactly which section of the text will be re-highlighted.
         /// This can be useful to highlight multi-line comments, for example.</remarks>
-        [DefaultValue(typeof (HighlightingRangeType), "ChangedRange")]
         [Description("This property specifies which part of the text will be highlighted as you type.")]
-        public HighlightingRangeType HighlightingRangeType { get; set; }
+        public HighlightingRangeType HighlightingRangeType { get; set; } = HighlightingRangeType.ChangedRange;
 
         /// <summary>
         /// Is keyboard in replace mode (wide caret) ?
@@ -1003,7 +1006,6 @@ namespace FastColoredTextBoxNS
         /// Language for highlighting by built-in highlighter.
         /// </summary>
         [Browsable(true)]
-        [DefaultValue(typeof (Language), "Custom")]
         [Description("Language for highlighting by built-in highlighter.")]
         public Language Language
         {
@@ -1290,7 +1292,6 @@ namespace FastColoredTextBoxNS
         /// WordWrap mode.
         /// </summary>
         [Browsable(true)]
-        [DefaultValue(typeof (WordWrapMode), "WordWrapControlWidth")]
         [Description("WordWrap mode.")]
         public WordWrapMode WordWrapMode
         {
@@ -2367,7 +2368,7 @@ namespace FastColoredTextBoxNS
                 VisibleRangeChangedDelayed(this, new EventArgs());
         }
 
-        Dictionary<Timer, Timer> timersToReset = new Dictionary<Timer, Timer>();
+        readonly Dictionary<Timer, Timer> timersToReset = new Dictionary<Timer, Timer>();
 
         private void ResetTimer(Timer timer)
         {
@@ -2984,7 +2985,7 @@ namespace FastColoredTextBoxNS
                 }
         }
 
-        List<Control> tempHintsList = new List<Control>();
+        readonly List<Control> tempHintsList = new List<Control>();
 
         void HideHints()
         {
@@ -3606,7 +3607,7 @@ namespace FastColoredTextBoxNS
             return base.ProcessDialogKey(keyData);
         }
 
-        static Dictionary<FCTBAction, bool> scrollActions = new Dictionary<FCTBAction, bool>() { { FCTBAction.ScrollDown, true }, { FCTBAction.ScrollUp, true }, { FCTBAction.ZoomOut, true }, { FCTBAction.ZoomIn, true }, { FCTBAction.ZoomNormal, true } };
+        static readonly Dictionary<FCTBAction, bool> scrollActions = new Dictionary<FCTBAction, bool>() { { FCTBAction.ScrollDown, true }, { FCTBAction.ScrollUp, true }, { FCTBAction.ZoomOut, true }, { FCTBAction.ZoomIn, true }, { FCTBAction.ZoomNormal, true } };
 
         /// <summary>
         /// Process control keys
@@ -4633,7 +4634,7 @@ namespace FastColoredTextBoxNS
         /// </summary>
         public void DoAutoIndentChars(int iLine)
         {
-            var patterns = AutoIndentCharsPatterns.Split(new char[] {'\r', '\n'}, StringSplitOptions.RemoveEmptyEntries);
+            var patterns = AutoIndentCharsPatterns.Split(separator, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var pattern in patterns)
             {
@@ -6656,7 +6657,6 @@ namespace FastColoredTextBoxNS
         /// <summary>
         /// Exapnds all folded blocks
         /// </summary>
-        /// <param name="iLine"></param>
         public virtual void ExpandAllFoldingBlocks()
         {
             for (int i = 0; i < LinesCount; i++)
@@ -8314,6 +8314,7 @@ window.status = ""#print"";
         [DllImport("user32.dll")]
         private static extern int SendMessage(IntPtr hwnd, int wMsg, int wParam, int lParam);
         private const int WM_SETREDRAW = 0xB;
+        private static readonly char[] separator = new char[] {'\r', '\n'};
 
         void middleClickScrollingTimer_Tick(object sender, EventArgs e)
         {

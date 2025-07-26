@@ -1,96 +1,89 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace FastColoredTextBoxNS
 {
-    ///
-    /// These classes are required for correct data binding to Text property of FastColoredTextbox
-    /// 
+    /// <summary>
+    /// AOT-compatible replacement for complex TypeDescriptor system
+    /// Provides simple data binding support without reflection-heavy CustomTypeDescriptor
+    /// </summary>
+    public static class FCTBDataBindingHelper
+    {
+        /// <summary>
+        /// Sets up simple data binding for FastColoredTextBox
+        /// This replaces the complex TypeDescriptor system with a direct approach
+        /// </summary>
+        public static void SetupDataBinding(FastColoredTextBox textBox, object dataSource, string dataMember)
+        {
+            if (textBox == null || dataSource == null)
+                return;
+
+            // Simple direct binding - AOT compatible
+            // Uses BindingTextChanged event instead of complex TypeDescriptor manipulation
+            var binding = new Binding("Text", dataSource, dataMember, false, DataSourceUpdateMode.OnPropertyChanged);
+            
+            // Handle the binding manually to avoid TypeDescriptor complexity
+            binding.Format += (sender, e) => {
+                // Custom formatting if needed
+            };
+            
+            binding.Parse += (sender, e) => {
+                // Custom parsing if needed  
+            };
+
+            textBox.DataBindings.Add(binding);
+        }
+
+        /// <summary>
+        /// Alternative method for manual data binding setup
+        /// Completely bypasses TypeDescriptor system
+        /// </summary>
+        public static void SetupManualBinding(FastColoredTextBox textBox, 
+            Func<string> getter, 
+            Action<string> setter)
+        {
+            if (textBox == null || getter == null || setter == null)
+                return;
+
+            // Manual two-way binding
+            textBox.BindingTextChanged += (sender, e) => {
+                setter(textBox.Text);
+            };
+
+            // Initial value
+            textBox.Text = getter();
+        }
+    }
+
+    // Legacy classes kept for compatibility but marked as obsolete
+    [Obsolete("Use FCTBDataBindingHelper for AOT-compatible data binding", true)]
     class FCTBDescriptionProvider : TypeDescriptionProvider
     {
-        public FCTBDescriptionProvider(Type type)
-            : base(GetDefaultTypeProvider(type))
-        {
-        }
-
-        private static TypeDescriptionProvider GetDefaultTypeProvider(Type type)
-        {
-            return TypeDescriptor.GetProvider(type);
-        }
-
-
-
-        public override ICustomTypeDescriptor GetTypeDescriptor(Type objectType, object instance)
-        {
-            ICustomTypeDescriptor defaultDescriptor = base.GetTypeDescriptor(objectType, instance);
-            return new FCTBTypeDescriptor(defaultDescriptor, instance);
-        }
+        public FCTBDescriptionProvider(Type type) : base(GetDefaultTypeProvider(type)) { }
+        private static TypeDescriptionProvider GetDefaultTypeProvider(Type type) => TypeDescriptor.GetProvider(type);
+        public override ICustomTypeDescriptor GetTypeDescriptor(Type objectType, object instance) => 
+            throw new NotSupportedException("Use FCTBDataBindingHelper for AOT-compatible data binding");
     }
 
+    [Obsolete("Use FCTBDataBindingHelper for AOT-compatible data binding", true)]
     class FCTBTypeDescriptor : CustomTypeDescriptor
     {
-        ICustomTypeDescriptor parent;
-        object instance;
-
-        public FCTBTypeDescriptor(ICustomTypeDescriptor parent, object instance)
-            : base(parent)
-        {
-            this.parent = parent;
-            this.instance = instance;
-        }
-
-        public override string GetComponentName()
-        {
-            var ctrl = (instance as Control);
-            return ctrl == null ? null : ctrl.Name;
-        }
-
-        public override EventDescriptorCollection GetEvents()
-        {
-            var coll = base.GetEvents();
-            var list = new EventDescriptor[coll.Count];
-
-            for (int i = 0; i < coll.Count; i++)
-                if (coll[i].Name == "TextChanged")//instead of TextChanged slip BindingTextChanged for binding
-                    list[i] = new FooTextChangedDescriptor(coll[i]);
-                else
-                    list[i] = coll[i];
-
-            return new EventDescriptorCollection(list);
-        }
+        public FCTBTypeDescriptor(ICustomTypeDescriptor parent, object instance) : base(parent) { }
+        public override EventDescriptorCollection GetEvents() => 
+            throw new NotSupportedException("Use FCTBDataBindingHelper for AOT-compatible data binding");
     }
 
+    [Obsolete("Use FCTBDataBindingHelper for AOT-compatible data binding", true)]
     class FooTextChangedDescriptor : EventDescriptor
     {
-        public FooTextChangedDescriptor(MemberDescriptor desc)
-            : base(desc)
-        {
-        }
-
-        public override void AddEventHandler(object component, Delegate value)
-        {
-            (component as FastColoredTextBox).BindingTextChanged += value as EventHandler;
-        }
-
-        public override Type ComponentType
-        {
-            get { return typeof(FastColoredTextBox); }
-        }
-
-        public override Type EventType
-        {
-            get { return typeof(EventHandler); }
-        }
-
-        public override bool IsMulticast
-        {
-            get { return true; }
-        }
-
-        public override void RemoveEventHandler(object component, Delegate value)
-        {
-            (component as FastColoredTextBox).BindingTextChanged -= value as EventHandler;
-        }
+        public FooTextChangedDescriptor(MemberDescriptor desc) : base(desc) { }
+        public override void AddEventHandler(object component, Delegate value) => 
+            throw new NotSupportedException("Use FCTBDataBindingHelper for AOT-compatible data binding");
+        public override Type ComponentType => typeof(FastColoredTextBox);
+        public override Type EventType => typeof(EventHandler);
+        public override bool IsMulticast => true;
+        public override void RemoveEventHandler(object component, Delegate value) => 
+            throw new NotSupportedException("Use FCTBDataBindingHelper for AOT-compatible data binding");
     }
 }

@@ -131,10 +131,12 @@ namespace FastColoredTextBoxNS
                 {
                     var pp = p.Split('=');
                     KEYS k;
-#if NET7_0_OR_GREATER
+
 
                     Dictionary<string, KEYS> mapping = new Dictionary<string, KEYS>();
-                    foreach (KEYS item in Enum.GetValues(typeof(KEYS)))
+                    // Static array instead of Enum.GetValues() for AOT compatibility
+                    KEYS[] allKeys = GetAllKeysValues();
+                    foreach (KEYS item in allKeys)
                     {
                         mapping[item.ToString()] = item;
                     }
@@ -158,10 +160,11 @@ namespace FastColoredTextBoxNS
                     {
                         k = KEYS.NoName;
                     }
-#else
-                k = (Keys)kc.ConvertFromString(pp[0].Trim());
-#endif
-                    var a = (FCTBAction)Enum.Parse(typeof(FCTBAction), pp[1].Trim());
+
+                    if (!Enum.TryParse<FCTBAction>(pp[1].Trim(), out var a))
+                    {
+                        throw new ArgumentException($"Invalid FCTBAction value: {pp[1].Trim()}");
+                    }
                     result[k] = a;
                 }
 
@@ -175,6 +178,86 @@ namespace FastColoredTextBoxNS
             Thread.CurrentThread.CurrentUICulture = cult;
 
             return result;
+        }
+        /// <summary>
+        /// Gets all Keys enum values for AOT compatibility
+        /// </summary>
+        private static KEYS[] GetAllKeysValues()
+        {
+            return new KEYS[]
+            {
+                KEYS.None, KEYS.LButton, KEYS.RButton, KEYS.Cancel, KEYS.MButton, KEYS.XButton1, KEYS.XButton2,
+                KEYS.Back, KEYS.Tab, KEYS.LineFeed, KEYS.Clear, KEYS.Return, KEYS.Enter, KEYS.ShiftKey,
+                KEYS.ControlKey, KEYS.Menu, KEYS.Pause, KEYS.Capital, KEYS.CapsLock, KEYS.KanaMode,
+                KEYS.HanguelMode, KEYS.HangulMode, KEYS.JunjaMode, KEYS.FinalMode, KEYS.HanjaMode,
+                KEYS.KanjiMode, KEYS.Escape, KEYS.IMEConvert, KEYS.IMENonconvert, KEYS.IMEAccept,
+                KEYS.IMEAceept, KEYS.IMEModeChange, KEYS.Space, KEYS.Prior, KEYS.PageUp, KEYS.Next,
+                KEYS.PageDown, KEYS.End, KEYS.Home, KEYS.Left, KEYS.Up, KEYS.Right, KEYS.Down,
+                KEYS.Select, KEYS.Print, KEYS.Execute, KEYS.Snapshot, KEYS.PrintScreen, KEYS.Insert,
+                KEYS.Delete, KEYS.Help, KEYS.D0, KEYS.D1, KEYS.D2, KEYS.D3, KEYS.D4, KEYS.D5,
+                KEYS.D6, KEYS.D7, KEYS.D8, KEYS.D9, KEYS.A, KEYS.B, KEYS.C, KEYS.D, KEYS.E,
+                KEYS.F, KEYS.G, KEYS.H, KEYS.I, KEYS.J, KEYS.K, KEYS.L, KEYS.M, KEYS.N, KEYS.O,
+                KEYS.P, KEYS.Q, KEYS.R, KEYS.S, KEYS.T, KEYS.U, KEYS.V, KEYS.W, KEYS.X, KEYS.Y,
+                KEYS.Z, KEYS.LWin, KEYS.RWin, KEYS.Apps, KEYS.Sleep, KEYS.NumPad0, KEYS.NumPad1,
+                KEYS.NumPad2, KEYS.NumPad3, KEYS.NumPad4, KEYS.NumPad5, KEYS.NumPad6, KEYS.NumPad7,
+                KEYS.NumPad8, KEYS.NumPad9, KEYS.Multiply, KEYS.Add, KEYS.Separator, KEYS.Subtract,
+                KEYS.Decimal, KEYS.Divide, KEYS.F1, KEYS.F2, KEYS.F3, KEYS.F4, KEYS.F5, KEYS.F6,
+                KEYS.F7, KEYS.F8, KEYS.F9, KEYS.F10, KEYS.F11, KEYS.F12, KEYS.F13, KEYS.F14,
+                KEYS.F15, KEYS.F16, KEYS.F17, KEYS.F18, KEYS.F19, KEYS.F20, KEYS.F21, KEYS.F22,
+                KEYS.F23, KEYS.F24, KEYS.NumLock, KEYS.Scroll, KEYS.LShiftKey, KEYS.RShiftKey,
+                KEYS.LControlKey, KEYS.RControlKey, KEYS.LMenu, KEYS.RMenu, KEYS.BrowserBack,
+                KEYS.BrowserForward, KEYS.BrowserRefresh, KEYS.BrowserStop, KEYS.BrowserSearch,
+                KEYS.BrowserFavorites, KEYS.BrowserHome, KEYS.VolumeMute, KEYS.VolumeDown,
+                KEYS.VolumeUp, KEYS.MediaNextTrack, KEYS.MediaPreviousTrack, KEYS.MediaStop,
+                KEYS.MediaPlayPause, KEYS.LaunchMail, KEYS.SelectMedia, KEYS.LaunchApplication1,
+                KEYS.LaunchApplication2, KEYS.OemSemicolon, KEYS.Oem1, KEYS.Oemplus, KEYS.Oemcomma,
+                KEYS.OemMinus, KEYS.OemPeriod, KEYS.OemQuestion, KEYS.Oem2, KEYS.Oemtilde,
+                KEYS.Oem3, KEYS.OemOpenBrackets, KEYS.Oem4, KEYS.OemPipe, KEYS.Oem5,
+                KEYS.OemCloseBrackets, KEYS.Oem6, KEYS.OemQuotes, KEYS.Oem7, KEYS.Oem8,
+                KEYS.OemBackslash, KEYS.Oem102, KEYS.ProcessKey, KEYS.Packet, KEYS.Attn,
+                KEYS.Crsel, KEYS.Exsel, KEYS.EraseEof, KEYS.Play, KEYS.Zoom, KEYS.NoName,
+                KEYS.Pa1, KEYS.OemClear, KEYS.KeyCode, KEYS.Shift, KEYS.Control, KEYS.Alt
+            };
+        }
+
+        /// <summary>
+        /// Gets all FCTBAction enum values for AOT compatibility
+        /// </summary>
+        public static FCTBAction[] GetAllFCTBActionValues()
+        {
+            return new FCTBAction[]
+            {
+                FCTBAction.None, FCTBAction.AutocompleteMenu, FCTBAction.AutoIndentChars,
+                FCTBAction.BookmarkLine, FCTBAction.ClearHints, FCTBAction.ClearWordLeft,
+                FCTBAction.ClearWordRight, FCTBAction.CloneLine, FCTBAction.CommentSelected,
+                FCTBAction.Copy, FCTBAction.Cut, FCTBAction.DeleteCharRight, FCTBAction.FindChar,
+                FCTBAction.FindDialog, FCTBAction.FindNext, FCTBAction.GoDown,
+                FCTBAction.GoDownWithSelection, FCTBAction.GoDown_ColumnSelectionMode,
+                FCTBAction.GoEnd, FCTBAction.GoEndWithSelection, FCTBAction.GoFirstLine,
+                FCTBAction.GoFirstLineWithSelection, FCTBAction.GoHome, FCTBAction.GoHomeWithSelection,
+                FCTBAction.GoLastLine, FCTBAction.GoLastLineWithSelection, FCTBAction.GoLeft,
+                FCTBAction.GoLeftWithSelection, FCTBAction.GoLeft_ColumnSelectionMode,
+                FCTBAction.GoPageDown, FCTBAction.GoPageDownWithSelection, FCTBAction.GoPageUp,
+                FCTBAction.GoPageUpWithSelection, FCTBAction.GoRight, FCTBAction.GoRightWithSelection,
+                FCTBAction.GoRight_ColumnSelectionMode, FCTBAction.GoToDialog, FCTBAction.GoNextBookmark,
+                FCTBAction.GoPrevBookmark, FCTBAction.GoUp, FCTBAction.GoUpWithSelection,
+                FCTBAction.GoUp_ColumnSelectionMode, FCTBAction.GoWordLeft, FCTBAction.GoWordLeftWithSelection,
+                FCTBAction.GoWordRight, FCTBAction.GoWordRightWithSelection, FCTBAction.IndentIncrease,
+                FCTBAction.IndentDecrease, FCTBAction.LowerCase, FCTBAction.LowerCaseNoTxt,
+                FCTBAction.MacroExecute, FCTBAction.MacroRecord, FCTBAction.MoveSelectedLinesDown,
+                FCTBAction.MoveSelectedLinesUp, FCTBAction.NavigateBackward, FCTBAction.NavigateForward,
+                FCTBAction.Paste, FCTBAction.Redo, FCTBAction.ReplaceDialog, FCTBAction.ReplaceMode,
+                FCTBAction.ScrollDown, FCTBAction.ScrollUp, FCTBAction.SelectAll,
+                FCTBAction.UnbookmarkLine, FCTBAction.Undo, FCTBAction.UpperCase,
+                FCTBAction.UpperCaseNoTxt, FCTBAction.ZoomIn, FCTBAction.ZoomNormal, FCTBAction.ZoomOut,
+                FCTBAction.CustomAction1, FCTBAction.CustomAction2, FCTBAction.CustomAction3,
+                FCTBAction.CustomAction4, FCTBAction.CustomAction5, FCTBAction.CustomAction6,
+                FCTBAction.CustomAction7, FCTBAction.CustomAction8, FCTBAction.CustomAction9,
+                FCTBAction.CustomAction10, FCTBAction.CustomAction11, FCTBAction.CustomAction12,
+                FCTBAction.CustomAction13, FCTBAction.CustomAction14, FCTBAction.CustomAction15,
+                FCTBAction.CustomAction16, FCTBAction.CustomAction17, FCTBAction.CustomAction18,
+                FCTBAction.CustomAction19, FCTBAction.CustomAction20
+            };
         }
     }
 
@@ -284,7 +367,8 @@ namespace FastColoredTextBoxNS
 
         public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
         {
-            if ((provider != null) && (((IWindowsFormsEditorService) provider.GetService(typeof(IWindowsFormsEditorService))) != null))
+            // AOT-compatible service retrieval - avoid typeof() reflection
+            if ((provider != null) && (GetEditorService(provider) != null))
             {
                 var form = new HotkeysEditorForm(HotkeysMapping.Parse(value as string));
 
@@ -292,6 +376,16 @@ namespace FastColoredTextBoxNS
                     value = form.GetHotkeys().ToString();
             }
             return value;
+        }
+
+        /// <summary>
+        /// AOT-compatible method to get IWindowsFormsEditorService
+        /// </summary>
+        private static IWindowsFormsEditorService GetEditorService(IServiceProvider provider)
+        {
+            // typeof() with interface is AOT-safe (compile-time type reference)
+            // The issue was the complex cast expression, not typeof() itself
+            return provider.GetService(typeof(IWindowsFormsEditorService)) as IWindowsFormsEditorService;
         }
     }
 }

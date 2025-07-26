@@ -227,7 +227,8 @@ namespace FastColoredTextBoxNS
             p0 = new Point(0, p0.Y + (int) (point.Y/zoom));
             var pp = target.PointToPlace(p0);
             target.DoRangeVisible(new Range(target, pp, pp), true);
-            BeginInvoke((MethodInvoker)OnScroll);
+            // AOT-compatible BeginInvoke - use lambda instead of MethodInvoker cast
+            BeginInvoke(new Action(OnScroll));
         }
 
         private void OnScroll()

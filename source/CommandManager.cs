@@ -7,8 +7,8 @@ namespace FastColoredTextBoxNS
     {
         public static int MaxHistoryLength = 200;
 
-        LimitedStack<UndoableCommand> history;
-        Stack<UndoableCommand> redoStack = new Stack<UndoableCommand>();
+        readonly LimitedStack<UndoableCommand> history;
+        readonly Stack<UndoableCommand> redoStack = new Stack<UndoableCommand>();
         public TextSource TextSource{ get; private set; }
         public bool UndoRedoStackIsEnabled { get; set; }
 

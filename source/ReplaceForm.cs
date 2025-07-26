@@ -7,7 +7,7 @@ namespace FastColoredTextBoxNS
 {
     public partial class ReplaceForm : Form
     {
-        FastColoredTextBox tb;
+        readonly FastColoredTextBox tb;
         bool firstSearch = true;
         Place startPlace;
 

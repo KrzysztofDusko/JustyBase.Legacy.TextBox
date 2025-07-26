@@ -217,7 +217,7 @@ namespace FastColoredTextBoxNS
     public class MethodAutocompleteItem : AutocompleteItem
     {
         string firstPart;
-        string lowercaseText;
+        readonly string lowercaseText;
 
         public MethodAutocompleteItem(string text)
             : base(text)

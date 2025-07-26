@@ -92,12 +92,26 @@ namespace FastColoredTextBoxNS
             linesAccessor = new LinesAccessor(this);
             Manager = new CommandManager(this);
 
-            if (Enum.GetUnderlyingType(typeof(StyleIndex)) == typeof(UInt32))
+            // AOT-compatible check for StyleIndex underlying type
+            // StyleIndex is defined as either uint (32 styles) or ushort (16 styles)
+            if (IsStyleIndexUInt32())
                 Styles = new Style[32];
             else
                 Styles = new Style[16];
 
             InitDefaultStyle();
+        }
+
+        /// <summary>
+        /// AOT-compatible method to check StyleIndex underlying type
+        /// </summary>
+        private static bool IsStyleIndexUInt32()
+        {
+#if STYLES32
+            return true;  // StyleIndex : uint (32 styles)
+#else
+            return false; // StyleIndex : ushort (16 styles)
+#endif
         }
 
         public virtual void InitDefaultStyle()

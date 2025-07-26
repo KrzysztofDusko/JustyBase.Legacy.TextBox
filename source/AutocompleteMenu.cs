@@ -14,7 +14,7 @@ namespace FastColoredTextBoxNS
     [Browsable(false)]
     public class AutocompleteMenu : ToolStripDropDown, IDisposable
     {
-        AutocompleteListView listView;
+        readonly AutocompleteListView listView;
         public ToolStripControlHost host;
         public Range Fragment { get; internal set; }
 
@@ -209,7 +209,7 @@ namespace FastColoredTextBoxNS
         internal List<AutocompleteItem> visibleItems;
         IEnumerable<AutocompleteItem> sourceItems = new List<AutocompleteItem>();
         int focussedItemIndex = 0;
-        int hoveredItemIndex = -1;
+        readonly int hoveredItemIndex = -1;
 
         private int ItemHeight
         {
@@ -218,9 +218,9 @@ namespace FastColoredTextBoxNS
 
         AutocompleteMenu Menu { get { return Parent as AutocompleteMenu; } }
         int oldItemCount = 0;
-        FastColoredTextBox tb;
+        readonly FastColoredTextBox tb;
         internal ToolTip toolTip = new ToolTip();
-        System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+        readonly System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
 
         internal bool AllowTabKey { get; set; }
         public ImageList ImageList { get; set; }

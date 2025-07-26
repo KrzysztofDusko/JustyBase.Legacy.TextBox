@@ -9,7 +9,7 @@ namespace FastColoredTextBoxNS
     {
         bool firstSearch = true;
         Place startPlace;
-        FastColoredTextBox tb;
+        readonly FastColoredTextBox tb;
 
         public FindForm(FastColoredTextBox tb)
         {
