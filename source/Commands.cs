@@ -290,7 +290,7 @@ namespace FastColoredTextBoxNS
             this.insertedText = insertedText;
             lastSel = sel = new RangeInfo(ts.CurrentTB.Selection);
         }
-        public static bool CtrlZTest = false;
+        private static bool _ctrlZTest = true;
         /// <summary>
         /// Undo operation
         /// </summary>
@@ -306,7 +306,7 @@ namespace FastColoredTextBoxNS
             {
                 tb.Selection.Start = ranges[i].Start;
                 for (int j = 0; j < insertedText.Length; j++)
-                    tb.Selection.GoRight(true, CtrlZTest);
+                    tb.Selection.GoRight(true, _ctrlZTest);
                 ClearSelected(ts);
                 InsertTextCommand.InsertText(prevText[prevText.Count - i - 1], ts);
             }

@@ -215,21 +215,55 @@ namespace FastColoredTextBoxNS
 
                 int fromLine = Math.Min(end.iLine, start.iLine);
                 int toLine = Math.Max(end.iLine, start.iLine);
+
+                if (fromLine < 0) return "";
+
                 int fromChar = FromX;
                 int toChar = ToX;
-                if (fromLine < 0) return null;
-                //
-                StringBuilder sb = new StringBuilder();
+
+                int length = 0;
                 for (int y = fromLine; y <= toLine; y++)
                 {
-                    int fromX = y == fromLine ? fromChar : 0;
-                    int toX = y == toLine ? Math.Min(tb[y].Count - 1, toChar - 1) : tb[y].Count - 1;
-                    for (int x = fromX; x <= toX; x++)
-                        sb.Append(tb[y][x].c);
-                    if (y != toLine && fromLine != toLine)
-                        sb.AppendLine();
+                    int lineLength = tb[y].Count;
+                    int startChar = (y == fromLine) ? fromChar : 0;
+                    int endChar = (y == toLine) ? toChar : lineLength;
+                    length += Math.Max(0, endChar - startChar);
+
+                    if (y < toLine)
+                        length += Environment.NewLine.Length;
                 }
-                return sb.ToString();
+
+                if (length == 0) return "";
+
+                return string.Create(length, this, (span, range) =>
+                {
+                    var tb = range.tb;
+                    int fromLine_s = Math.Min(range.end.iLine, range.start.iLine);
+                    int toLine_s = Math.Max(range.end.iLine, range.start.iLine);
+                    int fromChar_s = range.FromX;
+                    int toChar_s = range.ToX;
+                    int currentPosition = 0;
+
+                    for (int y = fromLine_s; y <= toLine_s; y++)
+                    {
+                        var line = tb[y];
+                        int startX = (y == fromLine_s) ? fromChar_s : 0;
+                        int endX = (y == toLine_s) ? toChar_s : line.Count;
+
+                        for (int x = startX; x < endX; x++)
+                        {
+                            span[currentPosition++] = line[x].c;
+                        }
+
+                        if (y < toLine_s)
+                        {
+                            foreach (char c in Environment.NewLine)
+                            {
+                                span[currentPosition++] = c;
+                            }
+                        }
+                    }
+                });
             }
         }
 

@@ -42,7 +42,7 @@
             this.label.Name = "label";
             this.label.Size = new System.Drawing.Size(97, 15);
             this.label.TabIndex = 0;
-            this.label.Text = "Numer linii (1/1):";
+            this.label.Text = "Line number (1/1):";
             // 
             // tbLineNumber
             // 
@@ -74,7 +74,7 @@
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(88, 27);
             this.btnCancel.TabIndex = 3;
-            this.btnCancel.Text = "Anuluj";
+            this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
